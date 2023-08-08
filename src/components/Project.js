@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+
 
 const Project = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -50,7 +49,7 @@ const Project = () => {
     }
   };
 
-  const handleAddProduct = () => {
+  const handleAddProduct = (e) => {
     if (productName.trim() && productPrice.trim() && productImage) {
       const newProduct = {
         name: productName,
@@ -85,75 +84,107 @@ const Project = () => {
 
   return (
     <div>
-      <nav style={{marginBottom:'40px',backgroundColor:'lightblue',width:'100%',display:'flex',justifyContent:'end'}}>
-        <Button variant="contained" color="primary" onClick={handleDialogOpen} sx={{margin:'5px 10px 5px 5px'}}>
-          Buy Now
-        </Button>
-      </nav>
+      <nav style={{marginBottom:'40px',backgroundColor:'lightblue',width:'100%',display:'flex',justifyContent:'end',height:'50px'}}>
+         <Button variant="contained" className='bg-primary' onClick={handleDialogOpen} style={{margin:'5px 9px',color:'white'}}>
+           Add Product
+         </Button>
+       </nav>
 
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle sx={{textAlign:'center'}}>Add Product</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sx={{textAlign:'center'}}>
-              <TextField label="Product Name" value={productName} onChange={handleProductNameChange} required />
-            </Grid>
-            <Grid item xs={12} sx={{textAlign:'center'}}>
-              <TextField label="Product Price" value={productPrice} onChange={handleProductPriceChange} required />
-            </Grid>
-            <Grid item xs={12} sx={{textAlign:'center',marginLeft:'50px',width:'900px'}}>
-              <input type="file" accept="image/*" onChange={handleProductImageChange} style={{padding:'5px 5px'}} required />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions style={{marginRight:'190px'}}>
-          <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button onClick={handleAddProduct}>Add Product</Button>
-        </DialogActions>
-      </Dialog>
+      <Modal show={openDialog} onHide={handleDialogClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col xs={12} className="text-center">
+                <Form.Control
+                  type="text"
+                  placeholder="Product Name"
+                  value={productName}
+                  onChange={handleProductNameChange}
+                  required
+                />
+              </Col>
+              <Col xs={12} className="text-center">
+                <Form.Control
+                  type="text"
+                  placeholder="Product Price"
+                  value={productPrice}
+                  className='mt-3'
+                  onChange={handleProductPriceChange}
+                  required
+                />
+              </Col>
+              <Col xs={12} >
+                <input type="file" accept="image/*" onChange={handleProductImageChange} className="p-2 mt-3" required />
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDialogClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleAddProduct}>
+            Add Product
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <div>
-        <Grid container spacing={2}>
-          {productList.map((product, index) => (
-            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-              <Card>
-                <CardContent>
-                  <img src={URL.createObjectURL(product.image)} alt={product.name} />
-                  <h3>Product Name :{product.name}</h3>
-                  <p>Product Price :{product.productPrice}</p>
-                </CardContent>
-                <CardActions>
-                  <Button onClick={() => handleQuantityChange(index, product.quantity - 1)}>-</Button>
-                  <span>Quantity :{product.quantity}</span>
-                  <Button onClick={() => handleQuantityChange(index, product.quantity + 1)}>+</Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell><h2>Product Name</h2></TableCell>
-              <TableCell><h2>Product Price</h2></TableCell>
-              <TableCell><h2>Quantity</h2></TableCell>
-              <TableCell><h2>Total</h2></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+        <Container>
+          <Row>
             {productList.map((product, index) => (
-              <TableRow key={index}>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.productPrice}</TableCell>
-                <TableCell>{product.quantity}</TableCell>
-                <TableCell>{product.price}</TableCell>
-              </TableRow>
+              <Col key={index} xs={12} sm={6} md={4} lg={3}>
+                <Card className='mt-4'>
+                  <Card.Img variant="top" src={URL.createObjectURL(product.image)} alt={product.name} width={'500px'} height={'300px'} />
+                  <Card.Body className='text-center'>
+                    <Card.Title >Product Name: {product.name}</Card.Title>
+                    <Card.Text>Product Price: {product.productPrice}</Card.Text>
+                  </Card.Body>
+                  <Card.Footer className='text-center'>
+                    <Button variant="primary" onClick={() => handleQuantityChange(index, product.quantity - 1)}>
+                      -
+                    </Button>
+                    <span className="mx-2">Quantity: {product.quantity}</span>
+                    <Button variant="primary" onClick={() => handleQuantityChange(index, product.quantity + 1)}>
+                      +
+                    </Button>
+                  </Card.Footer>
+                </Card>
+              </Col>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          </Row>
+        </Container>
+      </div>
+
+      <Container>
+        <Row>
+          <Col>
+            <Table striped bordered hover className=' table table-bordered mt-5'>
+              <thead className='thead-light'>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Product Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productList.map((product, index) => (
+                  <tr key={index}>
+                    <td>{product.name}</td>
+                    <td>{product.productPrice}</td>
+                    <td>{product.quantity}</td>
+                    <td>{product.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };
