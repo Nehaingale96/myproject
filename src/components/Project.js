@@ -140,14 +140,14 @@ const Project = () => {
                 <Card className='mt-4'>
                   <Card.Img variant="top" src={URL.createObjectURL(product.image)} alt={product.name} width={'500px'} height={'300px'} />
                   <Card.Body className='text-center'>
-                    <Card.Title >Product Name: {product.name}</Card.Title>
+                    <Card.Title > {product.name}</Card.Title>
                     <Card.Text>Product Price: {product.productPrice}</Card.Text>
                   </Card.Body>
                   <Card.Footer className='text-center'>
                     <Button variant="primary" onClick={() => handleQuantityChange(index, product.quantity - 1)}>
                       -
                     </Button>
-                    <span className="mx-2">Quantity: {product.quantity}</span>
+                    <span className="mx-2">$ {product.quantity}</span>
                     <Button variant="primary" onClick={() => handleQuantityChange(index, product.quantity + 1)}>
                       +
                     </Button>
